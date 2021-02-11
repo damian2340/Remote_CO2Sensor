@@ -14,7 +14,7 @@ void wifiInit()
     unsigned long timeout = millis() + 10000;
 
     displayClear();
-    displayPrintXY(0, 20, "Conectando\n\r");
+    displayPrintXY(0, 20, "Conectando");
     while (WiFi.status() != WL_CONNECTED)
     {
         if (timeout < millis())

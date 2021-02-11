@@ -50,58 +50,57 @@ void loop()
     {
         checkButtonTask();
         measureTask();
-    }
-    while (isMeasurenet())
-    {
-        if (WiFi.status() == WL_CONNECTED)
+        if(isMeasurenet())
         {
-            displaySetFont(u8g2_font_t0_18_tn);
-            displayPrintXY(5, 64, "Conectado y enviando");
-            co2Measu_t datosSensor = readFirstMeasure();
-            //formato de la fecha a mandar es yyyyMMddhhmmss o sea 14 caracteres y con el caracter de fin necesito 15 bytes
-            char fechaMedicion[15];
-            //No tengo ganas de pensar un nombre mejor para formatear la fecha.
-            timeFormat4y2M2d2h2m2s(datosSensor.fecha, fechaMedicion);
-            WiFiClient client;
-            HTTPClient http;
-            Serial.print("[HTTP] begin...\n");
-            sprintf(data, "%s/save?sensorid=%03d&time=%s&value=%d", server, SENSOR_ID, fechaMedicion, datosSensor.valorCo2);
-            Serial.println(data);
-            if (http.begin(client, data))
-            { // HTTP
-                Serial.print("[HTTP] GET...\n");
-                // start connection and send HTTP header
-                int httpCode = http.GET();
-                Serial.print("HTTPCODE: ");
-                Serial.println(httpCode);
-                // httpCode will be negative on error
-                if (httpCode > 0)
-                {
-                    // file found at server
-                    if (httpCode == 200)
+            if (WiFi.status() == WL_CONNECTED)
+            {
+                displaySetFont(u8g2_font_t0_18_tn);
+                displayPrintXY(5, 64, "Conectado y enviando");
+                co2Measu_t datosSensor = readFirstMeasure();
+                //formato de la fecha a mandar es yyyyMMddhhmmss o sea 14 caracteres y con el caracter de fin necesito 15 bytes
+                char fechaMedicion[15];
+                //No tengo ganas de pensar un nombre mejor para formatear la fecha.
+                timeFormat4y2M2d2h2m2s(datosSensor.fecha, fechaMedicion);
+                WiFiClient client;
+                HTTPClient http;
+                Serial.print("[HTTP] begin...\n");
+                sprintf(data, "%s/save?sensorid=%03d&time=%s&value=%d", server, SENSOR_ID, fechaMedicion, datosSensor.valorCo2);
+                Serial.println(data);
+                if (http.begin(client, data))
+                { // HTTP
+                    Serial.print("[HTTP] GET...\n");
+                    // start connection and send HTTP header
+                    int httpCode = http.GET();
+                    Serial.print("HTTPCODE: ");
+                    Serial.println(httpCode);
+                    // httpCode will be negative on error
+                    if (httpCode > 0)
                     {
-                        eraseFirstMeasure();
-                        Serial.println("Recepcion OK");
+                        // file found at server
+                        if (httpCode == 200)
+                        {
+                            eraseFirstMeasure();
+                            Serial.println("Recepcion OK");
+                        }
                     }
+                    else
+                    {
+                        Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+                    }
+                    http.end();
                 }
                 else
                 {
-                    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+                    Serial.printf("[HTTP] Unable to connect\n");
+                    break;
                 }
-                http.end();
             }
             else
             {
-                Serial.printf("[HTTP] Unable to connect\n");
-                break;
+                wifiInit();
+                displaySetFont(u8g2_font_t0_18_tn);
+                displayPrintXY(5, 48, "Desconectado");
             }
-            delay(300);
-        }
-        else
-        {
-            wifiInit();
-            displaySetFont(u8g2_font_t0_18_tn);
-            displayPrintXY(5, 48, "Desconectado");
         }
     }
 }
