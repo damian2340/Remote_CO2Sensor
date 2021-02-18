@@ -92,7 +92,6 @@ void loop()
                 else
                 {
                     Serial.printf("[HTTP] Unable to connect\n");
-                    break;
                 }
             }
             else
