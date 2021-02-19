@@ -2,6 +2,10 @@
 	"folders": [
 		{
 			"path": ".."
+		},
+		{
+			"name": "PruebaPIOwe",
+			"path": "..\\..\\..\\..\\PlatformIO\\Projects\\Wemos\\prueba01Eif\\PruebaPIOwe"
 		}
 	],
 	"settings": {
