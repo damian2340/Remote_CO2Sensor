@@ -1,11 +1,8 @@
 {
 	"folders": [
 		{
-			"path": ".."
-		},
-		{
-			"name": "PruebaPIOwe",
-			"path": "..\\..\\..\\..\\PlatformIO\\Projects\\Wemos\\prueba01Eif\\PruebaPIOwe"
+			"name": "wemosArduinoPrueba",
+			"path": "..\\..\\..\\..\\PlatformIO\\Projects\\wemosArduinoPrueba"
 		}
 	],
 	"settings": {
@@ -23,7 +20,10 @@
 			"utility": "cpp",
 			"cstddef": "cpp",
 			"limits": "cpp",
-			"unordered_map": "cpp"
+			"unordered_map": "cpp",
+			"pin_mux_register.h": "c",
+			"pwm.h": "c",
+			"esp_err.h": "c"
 		}
 	}
 }
